@@ -22,13 +22,10 @@ export const startServer = () => {
     }),
   );
 
-  // Use the contacts router
   app.use(contactsRouter);
 
-  // 404 handler middleware
   app.use(notFoundHandler);
 
-  // Error handler middleware
   app.use(errorHandler);
 
   const PORT = getEnvVar('PORT', 3000);
