@@ -1,9 +1,29 @@
-import createHttpError from 'http-errors';
 import { Contact } from '../db/models/contact.js';
+import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 
-export const getAllContacts = async () => {
-  const contacts = await Contact.find();
-  return contacts;
+export const getAllContacts = async ({
+  page = 1,
+  perPage = 10,
+  sortBy = '_id',
+  sortOrder = 'asc',
+  filter = {},
+}) => {
+  const limit = perPage;
+  const skip = (page - 1) * perPage;
+
+  const sortOptions = { [sortBy]: sortOrder === 'asc' ? 1 : -1 };
+
+  const [contacts, totalItems] = await Promise.all([
+    Contact.find(filter).skip(skip).limit(limit).sort(sortOptions),
+    Contact.countDocuments(filter),
+  ]);
+
+  const paginationData = calculatePaginationData(totalItems, perPage, page);
+
+  return {
+    data: contacts,
+    ...paginationData,
+  };
 };
 
 export const getContactById = async (contactId) => {
@@ -16,22 +36,18 @@ export const createContact = async (payload) => {
   return contact;
 };
 
-export const updateContact = async (contactId, payload, options) => {
-  const result = await Contact.findOneAndUpdate({ _id: contactId }, payload, {
-    ...options,
-    new: true,
-    includeResultMetadata: true,
-    runValidators: true,
-  });
+export const updateContact = async (contactId, payload, options = {}) => {
+  const result = await Contact.findOneAndUpdate(
+    { _id: contactId },
+    payload,
+    {
+      new: true,
+      runValidators: true,
+      ...options,
+    },
+  );
 
-  if (!result.value) {
-    throw createHttpError(404, 'Contact not found!');
-  }
-
-  return {
-    contact: result.value,
-    isNew: !result.lastErrorObject.updatedExisting,
-  };
+  return result;
 };
 
 export const deleteContactById = async (contactId) => {

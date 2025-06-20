@@ -36,12 +36,14 @@ contactsRouter.post(
 
 contactsRouter.patch(
   '/contacts/:contactId',
+  isValidId,
   validateBody(updateContactSchema),
   ctrlWrapper(patchContactController),
 );
 
 contactsRouter.delete(
   '/contacts/:contactId',
+  isValidId,
   ctrlWrapper(deleteContactByIdController),
 );
 
