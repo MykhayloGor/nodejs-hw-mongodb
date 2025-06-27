@@ -1,4 +1,5 @@
-import { model, Schema } from 'mongoose';
+import { model, Schema, Types } from 'mongoose';
+import { User } from './user';
 
 const contactSchema = new Schema(
   {
@@ -13,6 +14,12 @@ const contactSchema = new Schema(
     email: {
       type: String,
     },
+    userId: {
+      type: Types.ObjectId,
+      ref: User,
+      required: true,
+      unique: true,
+    },
     isFavourite: {
       type: Boolean,
       default: false,
@@ -26,8 +33,7 @@ const contactSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export const Contact = model('contact', contactSchema);
-

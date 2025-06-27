@@ -2,10 +2,12 @@ import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
 import { getEnvVar } from './utils/getEnvVar.js';
-
+import router from './routes/index.js';
 import contactsRouter from './routers/contacts.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
+import { requestId } from './middlewares/requestId.js';
+import cookieParser from 'cookie-parser';
 
 export const startServer = () => {
   const app = express();
@@ -20,7 +22,10 @@ export const startServer = () => {
         target: 'pino-pretty',
       },
     }),
+    app.use(cookieParser),
+    app.use(requestId),
   );
+  app.use(router);
 
   app.use(contactsRouter);
 
