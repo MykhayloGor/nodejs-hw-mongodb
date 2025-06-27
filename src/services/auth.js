@@ -15,7 +15,7 @@ export const registerUser = async (payload) => {
   const existingUser = await User.findOne({ email: payload.email });
 
   if (existingUser) {
-    throw createHttpError(409, 'User already registered!');
+    throw createHttpError(409, 'Email in use');
   }
 
   const hashedPassword = await bcrypt.hash(payload.password, 10);

@@ -1,15 +1,14 @@
 import { Router } from 'express';
-import { ctrlWrapper } from '../utils/ctrlWrapper';
-import { validateBody } from '../middlewares/validateBody';
+import { ctrlWrapper } from '../utils/ctrlWrapper.js';
+import { validateBody } from '../middlewares/validateBody.js';
 import {
   loginUserController,
-    registerUserController,
-    refreshSessionController,
+  registerUserController,
+  refreshSessionController,
   logoutUserController
 } from '../controllers/auth.js';
 
-import { registerUserSchema } from '../validation/auth.js';
-import { loginUserSchema } from '../validation/auth.js';
+import { registerUserSchema, loginUserSchema } from '../validation/auth.js';
 
 const authRouter = Router();
 
@@ -18,12 +17,21 @@ authRouter.post(
   validateBody(registerUserSchema),
   ctrlWrapper(registerUserController),
 );
+
 authRouter.post(
   '/auth/login',
   validateBody(loginUserSchema),
-  loginUserController,
+  ctrlWrapper(loginUserController),
 );
-authRouter.post('/auth/logout', logoutUserController);
-authRouter.post('/auth/refresh-session', refreshSessionController);
+
+authRouter.post(
+  '/auth/logout', 
+  ctrlWrapper(logoutUserController)
+);
+
+authRouter.post(
+  '/auth/refresh', 
+  ctrlWrapper(refreshSessionController)
+);
 
 export default authRouter;
