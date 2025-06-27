@@ -1,13 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
+import cookieParser from 'cookie-parser';
 import { getEnvVar } from './utils/getEnvVar.js';
-import router from './routes/index.js';
-import contactsRouter from './routers/contacts.js';
+import router from './routers/index.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { requestId } from './middlewares/requestId.js';
-import cookieParser from 'cookie-parser';
 
 export const startServer = () => {
   const app = express();
@@ -16,21 +15,20 @@ export const startServer = () => {
 
   app.use(cors());
   app.use(express.json());
+  app.use(cookieParser());
+  app.use(requestId);
+  
   app.use(
     pino({
       transport: {
         target: 'pino-pretty',
       },
     }),
-    app.use(cookieParser),
-    app.use(requestId),
   );
+
   app.use(router);
 
-  app.use(contactsRouter);
-
   app.use(notFoundHandler);
-
   app.use(errorHandler);
 
   const PORT = getEnvVar('PORT', 3000);
