@@ -14,23 +14,42 @@ export const authenticate = async (req, res, next) => {
     throw createHttpError(401, 'Auth token must be of type Bearer!');
   }
 
+  console.log('=== AUTHENTICATE DEBUG ===');
+  console.log('Token received:', token);
+
   const session = await Session.findOne({ accessToken: token });
+  
+  console.log('Session found:', !!session);
+  if (session) {
+    console.log('Session userId:', session.userId);
+    console.log('Session expires:', session.accessTokenValidUntil);
+    console.log('Current time:', new Date());
+    console.log('Is expired:', session.accessTokenValidUntil < new Date());
+  }
 
   if (!session) {
+    console.log('No session found for token');
     throw createHttpError(401, 'Session not found!');
   }
 
   if (session.accessTokenValidUntil < new Date()) {
+    console.log('Session expired');
     throw createHttpError(401, 'Access token expired!');
   }
 
   const user = await User.findById(session.userId);
+  console.log('User found:', !!user);
+  if (user) {
+    console.log('User ID:', user._id);
+  }
 
   if (!user) {
     throw createHttpError(401, 'User not found!');
   }
 
   req.user = user;
+  console.log('req.user set:', !!req.user);
+  console.log('=========================');
 
   next();
 };
