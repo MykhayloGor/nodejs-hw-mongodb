@@ -8,7 +8,7 @@ import {
 import createHttpError from 'http-errors';
 
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
-import { parseSortParams, parseFilterParams } from '../utils/parseContactParams.js';
+import { parseSortParams, parseFilterParams } from '../utils/parseContactsParams.js';
 
 export const getContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
