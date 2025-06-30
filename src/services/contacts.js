@@ -14,7 +14,7 @@ export const getAllContacts = async ({
 
   const sortOptions = { [sortBy]: sortOrder === 'asc' ? 1 : -1 };
 
-  const searchFilter = { ...filter, userId };
+  const searchFilter = { ...filter, userId: userId };
 
   const [contacts, totalItems] = await Promise.all([
     Contact.find(searchFilter).skip(skip).limit(limit).sort(sortOptions),
