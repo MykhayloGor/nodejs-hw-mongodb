@@ -12,28 +12,14 @@ export const getAllContacts = async ({
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
-  console.log('=== DEBUG INFO ===');
-  console.log('userId received:', userId);
-  console.log('userId type:', typeof userId);
-  console.log('filter received:', filter);
-
   const sortOptions = { [sortBy]: sortOrder === 'asc' ? 1 : -1 };
 
-  const searchFilter = { 
-    ...filter, 
-    userId: userId
-  };
-
-  console.log('searchFilter built:', searchFilter);
+  const searchFilter = { ...filter, userId };
 
   const [contacts, totalItems] = await Promise.all([
     Contact.find(searchFilter).skip(skip).limit(limit).sort(sortOptions),
     Contact.countDocuments(searchFilter),
   ]);
-
-  console.log('Query returned', contacts.length, 'contacts');
-  console.log('First contact userId:', contacts[0]?.userId);
-  console.log('==================');
 
   const paginationData = calculatePaginationData(totalItems, perPage, page);
 
@@ -53,12 +39,7 @@ export const createContact = async (payload) => {
   return contact;
 };
 
-export const updateContact = async (
-  contactId,
-  payload,
-  userId,
-  options = {},
-) => {
+export const updateContact = async (contactId, payload, userId, options = {}) => {
   const result = await Contact.findOneAndUpdate(
     { _id: contactId, userId },
     payload,
