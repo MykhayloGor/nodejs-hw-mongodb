@@ -15,12 +15,24 @@ export const getContactsController = async (req, res) => {
   const { sortBy, sortOrder } = parseSortParams(req.query);
   const filter = parseFilterParams(req.query);
 
+  // DEBUG req.user
+  console.log('=== CONTROLLER DEBUG ===');
+  console.log('req.user:', req.user);
+  console.log('req.user keys:', Object.keys(req.user || {}));
+  console.log('req.user._id:', req.user?._id);
+  console.log('req.user.id:', req.user?.id);
+  console.log('typeof req.user._id:', typeof req.user?._id);
+  console.log('========================');
+
+  const userId = req.user._id;
+
   const contacts = await getAllContacts({
     page,
     perPage,
     sortBy,
     sortOrder,
     filter,
+    userId,
   });
 
   res.json({
