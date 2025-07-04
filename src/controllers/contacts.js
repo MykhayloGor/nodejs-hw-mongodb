@@ -4,11 +4,15 @@ import {
   createContact,
   updateContact,
   deleteContactById,
+  uploadContactPhoto,
 } from '../services/contacts.js';
 import createHttpError from 'http-errors';
 
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
-import { parseSortParams, parseFilterParams } from '../utils/parseContactsParams.js';
+import {
+  parseSortParams,
+  parseFilterParams,
+} from '../utils/parseContactsParams.js';
 
 export const getContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -88,4 +92,18 @@ export const deleteContactByIdController = async (req, res) => {
   }
 
   res.status(204).send();
+};
+
+export const uploadContactPhotoController = async (req, res) => {
+  const { contactId } = req.params;
+  const userId = req.user._id;
+  const file = req.file;
+
+  const contact = await uploadContactPhoto(contactId, userId, file);
+
+  res.json({
+    status: 200,
+    message: 'Contact photo uploaded successfully!',
+    data: contact,
+  });
 };

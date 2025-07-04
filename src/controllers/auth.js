@@ -3,9 +3,14 @@ import {
   registerUser,
   refreshSession,
   logoutUser,
-  sendResetEmail,
-  resetPassword,
+//   sendResetPasswordEmail,
+    resetPassword,
 } from '../services/auth.js';
+
+import { createJwtToken } from '../utils/jwt.js';  // ← Add this
+import { getEnvVar } from '../utils/getEnvVar.js';  // ← Add this
+import { User } from '../db/models/user.js';       // ← Add this
+import createHttpError from 'http-errors';         // ← Should exist
 
 const setupSessionCookies = (session, res) => {
   res.cookie('sessionId', session.id, {
@@ -69,17 +74,17 @@ export const refreshSessionController = async (req, res) => {
   });
 };
 
-export const sendResetEmailController = async (req, res) => {
-  const { email } = req.body;
+// export const sendResetPasswordEmailController = async (req, res) => {
+//   const { email } = req.body;
 
-  await sendResetEmail(email);
+//   await sendResetPasswordEmail(email);
 
-  res.json({
-    status: 200,
-    message: 'Reset password email has been successfully sent.',
-    data: {},
-  });
-};
+//   res.json({
+//     status: 200,
+//     message: 'Reset password email has been successfully sent.',
+//     data: {},
+//   });
+// };
 
 export const resetPasswordController = async (req, res) => {
   const { token, password } = req.body;
@@ -92,3 +97,28 @@ export const resetPasswordController = async (req, res) => {
     data: {},
   });
 };
+
+
+export const sendResetPasswordEmailController = async (req, res) => {
+    const { email } = req.body;
+  
+    // TEST MODE - return token instead of sending email
+    const user = await User.findOne({ email });
+    if (!user) {
+      throw createHttpError(404, 'User not found!');
+    }
+  
+    const resetToken = createJwtToken({ email });
+    const appDomain = getEnvVar('APP_DOMAIN');
+    const resetLink = `${appDomain}/reset-password?token=${resetToken}`;
+  
+    res.json({
+      status: 200,
+      message: 'Reset token generated successfully (TEST MODE)',
+      data: {
+        resetToken,
+        resetLink,
+        email
+      },
+    });
+  };

@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import crypto from 'node:crypto';
 import { User } from '../db/models/user.js';
 import { Session } from '../db/models/session.js';
-import { sendMail } from '../utils/sendMail.js';
+import { sendEmail } from '../utils/sendEmail.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
 import { createJwtToken, verifyJwtToken } from '../utils/jwt.js';
 
@@ -90,7 +90,7 @@ export const refreshSession = async (sessionId, sessionToken) => {
   return newSession;
 };
 
-export const sendResetEmail = async (email) => {
+export const sendResetPasswordEmail = async (email) => {
   const user = await User.findOne({ email });
 
   if (!user) {
@@ -102,7 +102,7 @@ export const sendResetEmail = async (email) => {
   const resetLink = `${appDomain}/reset-password?token=${resetToken}`;
 
   try {
-    await sendMail({
+    await sendEmail({
       to: email,
       subject: 'Reset Your Password',
       html: `
@@ -148,3 +148,23 @@ export const resetPassword = async (token, password) => {
     throw error;
   }
 };
+
+
+
+export const sendResetEmailTest = async (email) => {
+    const user = await User.findOne({ email });
+  
+    if (!user) {
+      throw createHttpError(404, 'User not found!');
+    }
+  
+    const resetToken = createJwtToken({ email });
+    const appDomain = getEnvVar('APP_DOMAIN');
+    const resetLink = `${appDomain}/reset-password?token=${resetToken}`;
+  
+    return {
+      resetToken,
+      resetLink,
+      email
+    };
+  };

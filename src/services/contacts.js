@@ -1,5 +1,6 @@
 import { Contact } from '../db/models/contact.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
+import { saveFile } from '../utils/saveFile.js';
 
 export const getAllContacts = async ({
   page = 1,
@@ -39,7 +40,12 @@ export const createContact = async (payload) => {
   return contact;
 };
 
-export const updateContact = async (contactId, payload, userId, options = {}) => {
+export const updateContact = async (
+  contactId,
+  payload,
+  userId,
+  options = {},
+) => {
   const result = await Contact.findOneAndUpdate(
     { _id: contactId, userId },
     payload,
@@ -58,6 +64,20 @@ export const deleteContactById = async (contactId, userId) => {
     _id: contactId,
     userId,
   });
+
+  return contact;
+};
+
+export const uploadContactPhoto = async (contactId, userId, file) => {
+  const url = await saveFile(file);
+
+  const contact = await Contact.findOneAndUpdate(
+    { _id: contactId, userId },
+    {
+      photo: url,
+    },
+    { new: true },
+  );
 
   return contact;
 };
