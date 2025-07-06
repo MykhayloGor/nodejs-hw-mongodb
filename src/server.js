@@ -7,6 +7,10 @@ import router from './routers/index.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { requestId } from './middlewares/requestId.js';
+import { ENV_VARS } from './constants/envVars.js';
+import { PERMANENT_UPLOAD_DIR } from './constants/paths.js';
+
+
 
 export const startServer = () => {
   const app = express();
@@ -26,12 +30,14 @@ export const startServer = () => {
     }),
   );
 
+  app.use('/uploads', express.static(PERMANENT_UPLOAD_DIR));
+
   app.use(router);
 
   app.use(notFoundHandler);
   app.use(errorHandler);
 
-  const PORT = getEnvVar('PORT', 3000);
+  const PORT = getEnvVar(ENV_VARS.PORT, 3000);
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
