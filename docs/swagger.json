@@ -15,7 +15,7 @@
       "description": "Development server"
     },
     {
-      "url": "https://your-app-name.onrender.com",
+      "url": "https://nodejs-hw-mongodb-f9y8.onrender.com",
       "description": "Production server"
     }
   ],
@@ -32,9 +32,7 @@
   "paths": {
     "/contacts": {
       "get": {
-        "tags": [
-          "Contacts"
-        ],
+        "tags": ["Contacts"],
         "summary": "Get all contacts",
         "operationId": "getAllContacts",
         "description": "Retrieve a paginated list of contacts belonging to the authenticated user.\nSupports filtering, sorting, and pagination.\n",
@@ -96,10 +94,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": [
-                "asc",
-                "desc"
-              ],
+              "enum": ["asc", "desc"],
               "default": "asc",
               "example": "asc"
             }
@@ -121,11 +116,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": [
-                "work",
-                "home",
-                "personal"
-              ],
+              "enum": ["work", "home", "personal"],
               "example": "personal"
             }
           }
@@ -198,9 +189,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Contacts"
-        ],
+        "tags": ["Contacts"],
         "summary": "Create a new contact",
         "operationId": "createContact",
         "description": "Create a new contact with optional photo upload.\nThe photo will be uploaded to Cloudinary and the URL will be stored in the contact.\n",
@@ -215,15 +204,12 @@
             "multipart/form-data": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "name",
-                  "phoneNumber"
-                ],
+                "required": ["name", "phoneNumber"],
                 "properties": {
                   "name": {
                     "type": "string",
                     "description": "Full name of the contact",
-                    "example": "John Doe"
+                    "example": "Alice Cooper"
                   },
                   "phoneNumber": {
                     "type": "string",
@@ -234,15 +220,11 @@
                     "type": "string",
                     "format": "email",
                     "description": "Email address of the contact",
-                    "example": "john.doe@example.com"
+                    "example": "a.cooper@example.com"
                   },
                   "contactType": {
                     "type": "string",
-                    "enum": [
-                      "work",
-                      "home",
-                      "personal"
-                    ],
+                    "enum": ["work", "home", "personal"],
                     "default": "personal",
                     "description": "Type/category of the contact",
                     "example": "personal"
@@ -319,9 +301,7 @@
     },
     "/contacts/{contactId}": {
       "get": {
-        "tags": [
-          "Contacts"
-        ],
+        "tags": ["Contacts"],
         "summary": "Get contact by ID",
         "operationId": "getContactById",
         "description": "Retrieve a specific contact by its unique identifier. Only contacts belonging to the authenticated user can be accessed.",
@@ -397,9 +377,7 @@
         }
       },
       "patch": {
-        "tags": [
-          "Contacts"
-        ],
+        "tags": ["Contacts"],
         "summary": "Update contact",
         "operationId": "updateContact",
         "description": "Update an existing contact with optional photo upload.\nOnly the fields provided in the request will be updated.\nIf a photo is uploaded, it will replace the existing photo in Cloudinary.\n",
@@ -446,11 +424,7 @@
                   },
                   "contactType": {
                     "type": "string",
-                    "enum": [
-                      "work",
-                      "home",
-                      "personal"
-                    ],
+                    "enum": ["work", "home", "personal"],
                     "description": "Type/category of the contact",
                     "example": "work"
                   },
@@ -547,9 +521,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Contacts"
-        ],
+        "tags": ["Contacts"],
         "summary": "Delete contact",
         "operationId": "deleteContact",
         "description": "Delete a contact permanently. This action cannot be undone.\nIf the contact has a photo, it will also be removed from Cloudinary.\n",
@@ -607,9 +579,7 @@
     },
     "/auth/register": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "summary": "Register a new user",
         "operationId": "registerUser",
         "description": "Create a new user account with email and password.\nThe email must be unique and password will be securely hashed.\n",
@@ -620,11 +590,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "name",
-                  "email",
-                  "password"
-                ],
+                "required": ["name", "email", "password"],
                 "properties": {
                   "name": {
                     "type": "string",
@@ -727,9 +693,7 @@
     },
     "/auth/login": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "summary": "Login user",
         "operationId": "loginUser",
         "description": "Authenticate user with email and password.\nReturns an access token and sets session cookies.\n",
@@ -740,10 +704,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "email",
-                  "password"
-                ],
+                "required": ["email", "password"],
                 "properties": {
                   "email": {
                     "type": "string",
@@ -854,9 +815,7 @@
     },
     "/auth/logout": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "summary": "Logout user",
         "operationId": "logoutUser",
         "description": "Logout the current user by invalidating their session.\nClears session cookies and removes the session from the database.\n",
@@ -907,9 +866,7 @@
     },
     "/auth/refresh": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "summary": "Refresh user session",
         "operationId": "refreshSession",
         "description": "Refresh the user's session by generating new access and refresh tokens.\nRequires valid session cookies. The old session will be invalidated.\n",
@@ -987,9 +944,7 @@
     },
     "/auth/send-reset-email": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "summary": "Send password reset email",
         "operationId": "sendResetPasswordEmail",
         "description": "Send a password reset email to the user with a secure JWT token.\nThe email contains a beautiful HTML template with a reset link that expires in 5 minutes.\n",
@@ -1000,9 +955,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "email"
-                ],
+                "required": ["email"],
                 "properties": {
                   "email": {
                     "type": "string",
@@ -1117,9 +1070,7 @@
     },
     "/auth/reset-pwd": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "summary": "Reset user password",
         "operationId": "resetPassword",
         "description": "Reset user's password using the JWT token received via email.\nThe token expires in 5 minutes for security. After successful reset,\nall existing sessions for the user will be invalidated.\n",
@@ -1130,10 +1081,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "token",
-                  "password"
-                ],
+                "required": ["token", "password"],
                 "properties": {
                   "token": {
                     "type": "string",
@@ -1299,11 +1247,7 @@
           },
           "contactType": {
             "type": "string",
-            "enum": [
-              "work",
-              "home",
-              "personal"
-            ],
+            "enum": ["work", "home", "personal"],
             "description": "Type/category of the contact",
             "example": "personal"
           },
@@ -1374,13 +1318,7 @@
             "example": 0
           }
         },
-        "required": [
-          "_id",
-          "name",
-          "email",
-          "createdAt",
-          "updatedAt"
-        ]
+        "required": ["_id", "name", "email", "createdAt", "updatedAt"]
       }
     },
     "responses": {
