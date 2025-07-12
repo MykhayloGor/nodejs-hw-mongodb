@@ -1,0 +1,35 @@
+post:
+  tags:
+    - Authentication
+  summary: Logout user
+  operationId: logoutUser
+  description: |
+    Logout the current user by invalidating their session.
+    Clears session cookies and removes the session from the database.
+  security:
+    - cookieAuth: []
+  responses:
+    '204':
+      description: User logged out successfully (no content returned)
+      headers:
+        Set-Cookie:
+          description: Cleared session cookies
+          schema:
+            type: string
+            example: 'sessionId=; sessionToken=; HttpOnly; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT'
+    '401':
+      description: No active session found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 401
+              message:
+                type: string
+                example: 'No active session'
+              data:
+                type: string
+                example: 'No active session'

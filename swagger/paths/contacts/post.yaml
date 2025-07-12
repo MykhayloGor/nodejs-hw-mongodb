@@ -1,0 +1,83 @@
+post:
+  tags:
+    - Contacts
+  summary: Create a new contact
+  operationId: createContact
+  description: |
+    Create a new contact with optional photo upload.
+    The photo will be uploaded to Cloudinary and the URL will be stored in the contact.
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      multipart/form-data:
+        schema:
+          type: object
+          required:
+            - name
+            - phoneNumber
+          properties:
+            name:
+              type: string
+              description: Full name of the contact
+              example: 'John Doe'
+            phoneNumber:
+              type: string
+              description: Phone number of the contact
+              example: '+1234567890'
+            email:
+              type: string
+              format: email
+              description: Email address of the contact
+              example: 'john.doe@example.com'
+            contactType:
+              type: string
+              enum: [work, home, personal]
+              default: personal
+              description: Type/category of the contact
+              example: 'personal'
+            isFavourite:
+              type: boolean
+              default: false
+              description: Whether the contact is marked as favourite
+              example: false
+            photo:
+              type: string
+              format: binary
+              description: Contact photo (image file).
+              # Supported formats: JPG, PNG, WebP. Max size: 5MB
+  responses:
+    '201':
+      description: Contact created successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 201
+              message:
+                type: string
+                example: 'Successfully created a contact!'
+              data:
+                $ref: '../../components/schemas/Contact.yaml'
+    '400':
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 400
+              message:
+                type: string
+                example: 'Validation failed'
+              data:
+                type: string
+                example: 'Name is required'
+    '401':
+      $ref: '../../components/responses/UnauthorizedError.yaml'

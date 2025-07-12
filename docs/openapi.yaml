@@ -1,0 +1,76 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: Contacts API
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description: |
+    A comprehensive contacts management API with authentication, email functionality, and photo uploads.
+
+    Features:
+    - User authentication with JWT tokens
+    - Password reset via email
+    - Contact management (CRUD operations)
+    - Photo upload to Cloudinary
+    - Pagination and filtering
+
+tags:
+  - name: Authentication
+    description: User authentication and session management
+  - name: Contacts
+    description: Contact management operations
+
+servers:
+  - url: http://localhost:3000
+    description: Development server
+  - url: https://nodejs-hw-mongodb-f9y8.onrender.com
+    description: Production server
+
+paths:
+  /contacts:
+    get:
+      $ref: '../swagger/paths/contacts/get.yaml#/get'
+    post:
+      $ref: '../swagger/paths/contacts/post.yaml#/post'
+  /contacts/{contactId}:
+    get:
+      $ref: '../swagger/paths/contacts/{id}/get.yaml#/get'
+    patch:
+      $ref: '../swagger/paths/contacts/{id}/patch.yaml#/patch'
+    delete:
+      $ref: '../swagger/paths/contacts/{id}/delete.yaml#/delete'
+  /auth/register:
+    post:
+      $ref: '../swagger/paths/auth/register.yaml#/post'
+  /auth/login:
+    post:
+      $ref: '../swagger/paths/auth/login.yaml#/post'
+  /auth/logout:
+    post:
+      $ref: '../swagger/paths/auth/logout.yaml#/post'
+  /auth/refresh:
+    post:
+      $ref: '../swagger/paths/auth/refresh.yaml#/post'
+  /auth/send-reset-email:
+    post:
+      $ref: '../swagger/paths/auth/send-reset-email.yaml#/post'
+  /auth/reset-pwd:
+    post:
+      $ref: '../swagger/paths/auth/reset-pwd.yaml#/post'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token for authentication
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionToken
+      description: Session token stored in cookies
+
+  schemas:
+    $ref: '../swagger/components/schemas/index.yaml'

@@ -1,0 +1,4 @@
+Contact:
+  $ref: './Contact.yaml'
+User:
+  $ref: './User.yaml'

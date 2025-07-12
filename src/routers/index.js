@@ -8,4 +8,3 @@ router.use(contactsRouter);
 router.use(authRouter);
 
 export default router;
-

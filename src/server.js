@@ -9,8 +9,7 @@ import { errorHandler } from './middlewares/errorHandler.js';
 import { requestId } from './middlewares/requestId.js';
 import { ENV_VARS } from './constants/envVars.js';
 import { PERMANENT_UPLOAD_DIR } from './constants/paths.js';
-
-
+import { setupSwagger } from './middlewares/swagger.js';
 
 export const startServer = () => {
   const app = express();
@@ -21,7 +20,7 @@ export const startServer = () => {
   app.use(express.json());
   app.use(cookieParser());
   app.use(requestId);
-  
+
   app.use(
     pino({
       transport: {
@@ -29,6 +28,7 @@ export const startServer = () => {
       },
     }),
   );
+  app.use('/api-docs', setupSwagger());
 
   app.use('/uploads', express.static(PERMANENT_UPLOAD_DIR));
 
